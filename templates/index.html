@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable Select Box using Python Flask jQuery Ajax and PostgreSQL Database</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+ 
+    <script src="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
+    <link href="http://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">  
+        <br />
+        <h3 align="center">Editable Select Box using Python Flask jQuery Ajax and PostgreSQL Database</h3><br />
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <form method="post" id="sample_form">
+                    <div class="form-group">
+                        <label>Enter Name</label>
+                        <input type="text" name="name" id="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Country</label>
+                        <select name="country" id="country" class="form-control">
+                            {% for row in countrylist %}
+                                <option value="{{ row.name}}">{{row.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="存檔(Save)" id="save" class="btn btn-success" value="Save"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+    <script>
+        $(document).ready(function(){
+            $("#country").editableSelect();
+
+            $('#sample_form').on('submit',function(event){
+                event.preventDefault();
+                if ($('#name').val() == ""){
+                    alert("Enter Name");
+                    return false;
+                } else if ($('#country').val() == ''){
+                    alert("Select Country");
+                    return false;
+                } else {
+                    $.ajax({
+                        url: "/insert",
+                        method: "POST",
+                        data:$(this).serialize(),
+                        success:function(data)
+                        {
+                            alert(data);
+                            $('#sample_form')[0].reset();
+                        }
+                    });
+                }
+            
+            });
+        });
+        
+    </script>
+</body>
+</html>
